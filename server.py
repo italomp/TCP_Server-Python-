@@ -1,6 +1,8 @@
 #coding:utf-8
 #@author Italo Modesto
+#https://wiki.python.org.br/SocketBasico
 
+from __future__ import unicode_literals
 import socket
 
 tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,23 +13,24 @@ server_address = (host, door)
 
 tcp.bind(server_address)
 
-tcp.listen(1)
+tcp.listen(10)
 print ("Servidor tcp iniciado no ip", host, "porta", door)
 
- 
-conn, client = tcp.accept()
-print ("Conectado com: ", client)
-	
 while True:
-	msg = conn.recv(1024)
-	print("mensagem do cliente:", msg.decode(), "\n")
+	conn, client = tcp.accept()
+	print ("Conectado com: ", client)
 	
-	if(msg.decode() == "close"):
-		client.close()
-		break
+	while True:
+		msg = conn.recv(1024)
+		print("mensagem do cliente: ")
+		print(msg.decode())
+	
+		if(msg.decode() == "bye"):
+			client.close()
+			break
 			
-	response = input("Digite sua resposta: ")
-	conn.send(str(response).encode())
+		response = raw_input("Digite sua resposta: ")
+		conn.send(str(response).encode())
 
 
 
